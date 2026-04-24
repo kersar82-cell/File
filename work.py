@@ -9,8 +9,7 @@ from supabase import create_client, Client
 
 # ================= কনফিগারেশন (আপনার তথ্য দিন) =================
 # ১. আপনার নতুন ২য় বটের টোকেন (যেটি প্রাইভেট চ্যানেলে বসে থাকবে)
-WORKER_BOT_TOKEN = "8731153350:AAF2nnUj7e2ej37kZEzcc-_Pc4bbvoFyqN4"
-
+WORKER_BOT_TOKEN = "8607582550:AAHV8x6s1-8rd90Zcw_LlhLNKTK7JjKL0Og"
 # ২. আপনার আসল মেইন বটের টোকেন (ইউজারকে মেসেজ পাঠানোর জন্য)
 MAIN_BOT_TOKEN = "8203253229:AAGlZpmZ2TDWVtGts5bqcLWE96TDY9CmnQs" 
 
