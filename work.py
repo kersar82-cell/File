@@ -33,23 +33,27 @@ print("🚀 Worker Bot is listening to the channel...")
 # ================= কোর প্রসেসিং ইঞ্জিন (ফাইল রিসিভ ও গোনা) =================
 @dp.message_handler(content_types=['document'], chat_type=[types.ChatType.CHANNEL, types.ChatType.SUPERGROUP])
 async def process_channel_file(message: types.Message):
-    # ১. শুধু নির্দিষ্ট চ্যানেল থেকে ফাইল নিবে
+    # ১. ট্র্যাকার: বট মেসেজ দেখলেই লগে জানাবে
+    print(f"👀 Bot saw a file! Chat ID: {message.chat.id}")
+    
+    # ২. চ্যানেল আইডি চেক
     if message.chat.id != FILE_STORAGE_CHANNEL:
+        print(f"❌ Wrong Channel! Target: {FILE_STORAGE_CHANNEL}, Got: {message.chat.id}")
         return
 
-    # ২. ক্যাপশনে uid এবং cat আছে কিনা চেক (ছোট/বড় হাতের ঝামেলা এড়াতে .lower() ব্যবহার)
     caption = message.caption or ""
+    print(f"📝 Caption read: '{caption}'")
+
+    # ৩. ক্যাপশন চেক
     if "uid:" not in caption.lower() or "cat:" not in caption.lower():
+        print("❌ Caption rejected: Missing uid or cat")
         return
 
     try:
-        # ৩. ক্যাপশন থেকে আইডি এবং ক্যাটাগরি আলাদা করা (যেকোনো Case সাপোর্ট করবে)
+        print("✅ All check pass! Processing started...")
+        
         parts = caption.split("|")
-        
-        # 'Uid: 12345' বা 'uid: 12345' যেটাই থাকুক, কোলন (:) এর পরের অংশ নিবে
         user_id = int(parts[0].split(":", 1)[1].strip())
-        
-        # 'Cat: IG 2fa' বা 'cat: IG 2fa' থেকে আসল ক্যাটাগরি নামটা অবিকৃত অবস্থায় নিবে
         category = parts[1].split(":", 1)[1].strip()
         
         file_id = message.document.file_id
@@ -58,8 +62,11 @@ async def process_channel_file(message: types.Message):
         
         id_count = 0
         
-        # ৪. ফাইল সার্ভারে ডাউনলোড করা
-        # ... (এর নিচের বাকি কোড একদম আগের মতোই থাকবে, কোনো পরিবর্তন নেই) ...
+        print(f"⬇️ Downloading file: {file_name}")
+        file_info = await bot.get_file(file_id)
+        await bot.download_file(file_info.file_path, destination=file_path)
+
+        # ... (এর নিচের ডাটাবেস আপডেটের কোডগুলো একদম আগের মতোই থাকবে) ...
         
         # ৪. ফাইল সার্ভারে ডাউনলোড করা
         file_info = await bot.get_file(file_id)
