@@ -1,4 +1,6 @@
 aiogram==2.25.1
+flask
+openpyxl
 supabase
 requests
-openpyxl
+python-dotenv
