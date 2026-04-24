@@ -16,7 +16,7 @@ MAIN_BOT_TOKEN = "8203253229:AAGlZpmZ2TDWVtGts5bqcLWE96TDY9CmnQs"
 
 # ৩. ডাটাবেস এবং চ্যানেল সেটিংস
 SUPABASE_URL = "https://wvczkeugwcfhyizibafs.supabase.co"
-SUPABASE_KEY = ""
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind2Y3prZXVnd2NmaHlpemliYWZzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjE2NzQ1NywiZXhwIjoyMDkxNzQzNDU3fQ.xERE9HIq7fttGUaow9VwKn_A1YaoRr-w7OMf4eFJm3I"
 FILE_STORAGE_CHANNEL = -1003992295257 # আপনার প্রাইভেট চ্যানেল আইডি
 
 # কাজের রেট লিস্ট (হিসাবের জন্য)
