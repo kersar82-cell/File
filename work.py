@@ -122,8 +122,31 @@ async def process_channel_file(message: types.Message):
             os.remove(file_path)
         gc.collect() # সাথে সাথে মেমোরি ক্লিয়ার!
 
+import http.server
+import socketserver
+from threading import Thread
+
+# রেন্ডারকে শান্ত রাখার জন্য ডামি সার্ভার (ফেক পোর্ট)
+def keep_alive():
+    def run():
+        # রেন্ডার নিজে থেকে যে পোর্ট দিবে সেটা নিবে, না পেলে 8080 নিবে
+        port = int(os.environ.get("PORT", 8080))
+        Handler = http.server.SimpleHTTPRequestHandler
+        try:
+            with socketserver.TCPServer(("", port), Handler) as httpd:
+                print(f"✅ Dummy Server is running on port {port}")
+                httpd.serve_forever()
+        except Exception as e:
+            print(f"Port Error: {e}")
+            
+    t = Thread(target=run, daemon=True)
+    t.start()
+
+# ================= ধাপ ৪: মেমোরি ক্লিনআপ এবং বট স্টার্ট =================
 if __name__ == '__main__':
-    # বট রান করার কমান্ড
+    # ১. পোর্ট ওপেন করা
+    keep_alive()
+    
+    # ২. বট রান করার কমান্ড
     executor.start_polling(dp, skip_updates=True)
     
-        
