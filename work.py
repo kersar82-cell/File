@@ -9,14 +9,14 @@ from supabase import create_client, Client
 
 # ================= কনফিগারেশন (আপনার তথ্য দিন) =================
 # ১. আপনার নতুন ২য় বটের টোকেন (যেটি প্রাইভেট চ্যানেলে বসে থাকবে)
-WORKER_BOT_TOKEN = "এখানে_আপনার_নতুন_২য়_বটের_টোকেন_দিন"
+WORKER_BOT_TOKEN = "8731153350:AAF2nnUj7e2ej37kZEzcc-_Pc4bbvoFyqN4"
 
 # ২. আপনার আসল মেইন বটের টোকেন (ইউজারকে মেসেজ পাঠানোর জন্য)
-MAIN_BOT_TOKEN = "এখানে_আপনার_আসল_মেইন_বটের_টোকেন_দিন" 
+MAIN_BOT_TOKEN = "8203253229:AAGlZpmZ2TDWVtGts5bqcLWE96TDY9CmnQs" 
 
 # ৩. ডাটাবেস এবং চ্যানেল সেটিংস
 SUPABASE_URL = "https://wvczkeugwcfhyizibafs.supabase.co"
-SUPABASE_KEY = "আপনার_সুপাবেস_কি_এখানে_দিন"
+SUPABASE_KEY = ""
 FILE_STORAGE_CHANNEL = -1003992295257 # আপনার প্রাইভেট চ্যানেল আইডি
 
 # কাজের রেট লিস্ট (হিসাবের জন্য)
