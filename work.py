@@ -30,28 +30,36 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 print("🚀 Worker Bot is listening to the channel...")
 # ================= কোর প্রসেসিং ইঞ্জিন (ফাইল রিসিভ ও গোনা) =================
+# ================= কোর প্রসেসিং ইঞ্জিন (ফাইল রিসিভ ও গোনা) =================
 @dp.message_handler(content_types=['document'], chat_type=[types.ChatType.CHANNEL, types.ChatType.SUPERGROUP])
 async def process_channel_file(message: types.Message):
     # ১. শুধু নির্দিষ্ট চ্যানেল থেকে ফাইল নিবে
     if message.chat.id != FILE_STORAGE_CHANNEL:
         return
 
-    # ২. ক্যাপশনে uid এবং cat আছে কিনা চেক
+    # ২. ক্যাপশনে uid এবং cat আছে কিনা চেক (ছোট/বড় হাতের ঝামেলা এড়াতে .lower() ব্যবহার)
     caption = message.caption or ""
-    if "uid:" not in caption or "cat:" not in caption:
+    if "uid:" not in caption.lower() or "cat:" not in caption.lower():
         return
 
     try:
-        # ৩. ক্যাপশন থেকে ইউজারের আইডি এবং ক্যাটাগরি আলাদা করা
+        # ৩. ক্যাপশন থেকে আইডি এবং ক্যাটাগরি আলাদা করা (যেকোনো Case সাপোর্ট করবে)
         parts = caption.split("|")
-        user_id = int(parts[0].split("uid:")[1].strip())
-        category = parts[1].split("cat:")[1].strip()
+        
+        # 'Uid: 12345' বা 'uid: 12345' যেটাই থাকুক, কোলন (:) এর পরের অংশ নিবে
+        user_id = int(parts[0].split(":", 1)[1].strip())
+        
+        # 'Cat: IG 2fa' বা 'cat: IG 2fa' থেকে আসল ক্যাটাগরি নামটা অবিকৃত অবস্থায় নিবে
+        category = parts[1].split(":", 1)[1].strip()
         
         file_id = message.document.file_id
         file_name = message.document.file_name.lower()
         file_path = f"worker_{file_id}_{file_name}"
         
         id_count = 0
+        
+        # ৪. ফাইল সার্ভারে ডাউনলোড করা
+        # ... (এর নিচের বাকি কোড একদম আগের মতোই থাকবে, কোনো পরিবর্তন নেই) ...
         
         # ৪. ফাইল সার্ভারে ডাউনলোড করা
         file_info = await bot.get_file(file_id)
