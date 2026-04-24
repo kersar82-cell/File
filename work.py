@@ -70,9 +70,7 @@ async def process_channel_file(message: types.Message):
                     id_count += 1
                     
             wb.close() # কাজ শেষে ফাইল বন্ধ করা
-            
-        # --- (এর নিচে আমরা ৩য় ধাপে ডাটাবেস আপডেটের কোড বসাবো) ---
-        # ================= ধাপ ৩: ডাটাবেস আপডেট এবং মেসেজ পাঠানো =================
+                    # ================= ধাপ ৩: ডাটাবেস আপডেট এবং মেসেজ পাঠানো =================
         if id_count > 0:
             # ১. রেট অনুযায়ী ব্যালেন্স বের করা
             rate = IG_RATES.get(category) or FB_RATES.get(category) or 0
@@ -97,5 +95,35 @@ async def process_channel_file(message: types.Message):
             # ৪. ম্যাজিক: মেইন বটের টোকেন দিয়ে সরাসরি ইউজারকে সাকসেস মেসেজ পাঠানো!
             success_text = (
                 f"✅ **আপনার ফাইল সফলভাবে প্রসেস এবং সাবমিট হয়েছে!**\n\n"
-                f"📂 ক্যাটাগরি: {category
-          
+                f"📂 ক্যাটাগরি: {category}\n"
+                f"📊 আপনার মোট আইডি: **{id_count} টি**\n"
+                f"💰 পেন্ডিং ব্যালেন্সে যোগ হলো: **{total_pending:.2f} ৳**\n\n"
+                f"🔥 এডমিন রিপোর্ট দিলে আপনার মেইন ব্যালেন্সে টাকা দিয়ে দেওয়া হবে!"
+            )
+            
+            send_msg_url = f"https://api.telegram.org/bot{MAIN_BOT_TOKEN}/sendMessage"
+            requests.post(send_msg_url, json={"chat_id": user_id, "text": success_text, "parse_mode": "Markdown"})
+            
+        else:
+            # ফাইলে কোনো আইডি না থাকলে
+            err_url = f"https://api.telegram.org/bot{MAIN_BOT_TOKEN}/sendMessage"
+            requests.post(err_url, json={"chat_id": user_id, "text": "❌ আপনার ফাইলে কোনো আইডি পাওয়া যায়নি বা ফাইলটি ফাঁকা।"})
+
+    except Exception as e:
+        print(f"Worker Error: {e}")
+        # ক্র্যাশ করলে ইউজারকে জানিয়ে দেওয়া
+        err_url = f"https://api.telegram.org/bot{MAIN_BOT_TOKEN}/sendMessage"
+        requests.post(err_url, json={"chat_id": user_id, "text": "❌ ফাইল প্রসেস করতে কারিগরি ত্রুটি হয়েছে। এডমিনকে জানান।"})
+
+    finally:
+        # ================= ধাপ ৪: মেমোরি ক্লিনআপ এবং বট স্টার্ট =================
+        # 🧹 ম্যাজিক ক্লিনআপ: র‍্যাম একদম খালি করা (Garbage Collector)
+        if 'file_path' in locals() and os.path.exists(file_path):
+            os.remove(file_path)
+        gc.collect() # সাথে সাথে মেমোরি ক্লিয়ার!
+
+if __name__ == '__main__':
+    # বট রান করার কমান্ড
+    executor.start_polling(dp, skip_updates=True)
+    
+        
