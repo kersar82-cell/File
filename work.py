@@ -7,7 +7,7 @@ from threading import Thread
 
 # ================= কনফিগারেশন =================
 # শুধু নতুন ২য় বটের টোকেন দিতে হবে (Supabase বা মেইন বটের টোকেন লাগবে না)
-WORKER_BOT_TOKEN = "এখানে_নতুন_২য়_বটের_টোকেন_দিতে_হবে"
+WORKER_BOT_TOKEN = "8607582550:AAHV8x6s1-8rd90Zcw_LlhLNKTK7JjKL0Og"
 FILE_STORAGE_CHANNEL = -1003992295257
 
 bot = Bot(token=WORKER_BOT_TOKEN)
