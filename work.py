@@ -122,32 +122,33 @@ async def process_channel_file(message: types.Message):
             os.remove(file_path)
         gc.collect() # সাথে সাথে মেমোরি ক্লিয়ার!
 
-import http.server
-import socketserver
+# ==========================================
+# রেন্ডারকে শান্ত রাখার জন্য ফুলপ্রুফ Flask সার্ভার
+# ==========================================
+from flask import Flask
 from threading import Thread
 
-# রেন্ডারকে শান্ত রাখার জন্য ডামি সার্ভার (ফেক পোর্ট)
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "✅ Worker Bot is Alive and Running!"
+
+def run():
+    # রেন্ডারের ডিফল্ট পোর্ট ধরবে, না পেলে 8080 নিবে
+    port = int(os.environ.get("PORT", 8080))
+    # host="0.0.0.0" দেওয়াটা রেন্ডারের জন্য বাধ্যতামূলক!
+    app.run(host="0.0.0.0", port=port, debug=False, use_reloader=False)
+
 def keep_alive():
-    def run():
-        # রেন্ডার নিজে থেকে যে পোর্ট দিবে সেটা নিবে, না পেলে 8080 নিবে
-        port = int(os.environ.get("PORT", 8080))
-        Handler = http.server.SimpleHTTPRequestHandler
-        try:
-            with socketserver.TCPServer(("", port), Handler) as httpd:
-                print(f"✅ Dummy Server is running on port {port}")
-                httpd.serve_forever()
-        except Exception as e:
-            print(f"Port Error: {e}")
-            
     t = Thread(target=run, daemon=True)
     t.start()
 
 # ================= ধাপ ৪: মেমোরি ক্লিনআপ এবং বট স্টার্ট =================
 if __name__ == '__main__':
-    # ১. পোর্ট ওপেন করা
+    # ১. ফ্লাস্ক সার্ভার চালু করা (এটি রেন্ডারকে গ্রিন সিগন্যাল দিবে)
     keep_alive()
     
-    # ২. বট রান করার কমান্ড
+    # ২. বট পোলিং শুরু করা
+    print("🤖 Bot polling started...")
     executor.start_polling(dp, skip_updates=True)
-
-
